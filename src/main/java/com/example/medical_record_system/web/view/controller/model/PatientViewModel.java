@@ -1,4 +1,4 @@
-package com.example.medical_record_system.dto;
+package com.example.medical_record_system.web.view.controller.model;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
@@ -10,9 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class PatientDto {
-
-    private long id;
+public class PatientViewModel {
 
     @NotBlank
     private String name;
@@ -24,5 +22,4 @@ public class PatientDto {
 
     @NotBlank
     private boolean isInsured;
-
 }

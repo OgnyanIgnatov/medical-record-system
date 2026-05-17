@@ -18,7 +18,7 @@ public class VisitServiceImpl implements VisitService {
     private final MapperUtil mapperUtil;
 
     @Override
-    public VisitDto createVisit(Visit visit) {
+    public VisitDto createVisit(VisitDto visit) {
         return mapperUtil.getModelMapper().map(
                 this.visitRepo.save(
                         mapperUtil.getModelMapper().map(

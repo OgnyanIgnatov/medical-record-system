@@ -17,7 +17,7 @@ public class PatientServiceImpl implements PatientService {
     private final MapperUtil mapperUtil;
 
     @Override
-    public PatientDto createPatient(Patient patient) {
+    public PatientDto createPatient(PatientDto patient) {
         return mapperUtil.getModelMapper()
                 .map(this.patientRepo
                         .save(mapperUtil.getModelMapper()

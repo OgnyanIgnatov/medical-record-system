@@ -1,4 +1,4 @@
-package com.example.medical_record_system.dto;
+package com.example.medical_record_system.web.view.controller.model;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -11,19 +11,13 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class VisitDto {
-
-    private long id;
+public class SickNoteViewModel {
 
     @DateTimeFormat
-    private Date date;
+    @NotBlank
+    private Date issuedDate;
 
     @NotBlank
-    private String diagnosis;
+    private long daysCount;
 
-    @NotBlank
-    private String treatment;
-
-    @NotBlank
-    private float price;
 }

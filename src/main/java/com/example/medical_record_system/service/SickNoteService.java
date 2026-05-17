@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface SickNoteService {
 
-    SickNoteDto createSickNote(SickNote sickNote);
+    SickNoteDto createSickNote(SickNoteDto sickNote);
 
     List<SickNoteDto> getSickNotes();
 

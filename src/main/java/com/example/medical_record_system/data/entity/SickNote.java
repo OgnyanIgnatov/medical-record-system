@@ -16,7 +16,7 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SickNote {
+public class SickNote extends BaseEntity{
 
     @DateTimeFormat
     @NotBlank

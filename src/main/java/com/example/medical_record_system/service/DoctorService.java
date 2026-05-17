@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface DoctorService {
 
-    DoctorDto createDoctor(Doctor doctor);
+    DoctorDto createDoctor(DoctorDto doctor);
 
     List<DoctorDto> getDoctors();
 

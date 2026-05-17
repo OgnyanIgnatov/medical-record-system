@@ -17,7 +17,7 @@ public class SickNoteServiceImpl implements SickNoteService {
     private final MapperUtil mapperUtil;
 
     @Override
-    public SickNoteDto createSickNote(SickNote sickNote) {
+    public SickNoteDto createSickNote(SickNoteDto sickNote) {
         return mapperUtil.getModelMapper().map(
                 this.sickNoteRepo.save(
                         mapperUtil.getModelMapper().map(

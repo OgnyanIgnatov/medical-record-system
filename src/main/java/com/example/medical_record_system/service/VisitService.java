@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface VisitService {
 
-    VisitDto createVisit(Visit visit);
+    VisitDto createVisit(VisitDto visit);
 
     List<VisitDto> getVisits();
 

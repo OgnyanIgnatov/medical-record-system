@@ -1,4 +1,5 @@
-package com.example.medical_record_system.dto;
+package com.example.medical_record_system.web.view.controller.model;
+
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -6,12 +7,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
+@EqualsAndHashCode
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class VisitDto {
+public class CreateVisitViewModel {
 
     private long id;
 

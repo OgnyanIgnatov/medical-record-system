@@ -1,16 +1,18 @@
-package com.example.medical_record_system.dto;
+package com.example.medical_record_system.web.view.controller.model;
+
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
+@EqualsAndHashCode
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class PatientDto {
+public class CreatePatientViewModel {
 
     private long id;
 
