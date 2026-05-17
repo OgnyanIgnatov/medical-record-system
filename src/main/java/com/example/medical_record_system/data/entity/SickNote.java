@@ -2,6 +2,7 @@ package com.example.medical_record_system.data.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,10 +19,13 @@ import java.util.Date;
 public class SickNote {
 
     @DateTimeFormat
+    @NotBlank
     private Date issuedDate;
 
+    @NotBlank
     private long daysCount;
 
     @OneToOne
+    @NotBlank
     private Visit visit;
 }

@@ -17,16 +17,19 @@ import java.util.List;
 @NoArgsConstructor
 public class Patient extends BaseEntity{
 
+    @NotBlank
     private String name;
 
     @Column(unique = true)
     @Pattern(regexp = "\\d{10}", message = "Invalid ID number")
+    @NotBlank
     private String ucn;
 
     @ManyToOne
     @NotBlank
     private Doctor gp;
 
+    @NotBlank
     private boolean isInsured;
 
     @OneToMany(mappedBy = "patient")
