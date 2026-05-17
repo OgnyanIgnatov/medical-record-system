@@ -17,9 +17,9 @@ import java.util.List;
 public class Doctor extends BaseEntity{
 
     @Column(unique = true)
-    @Pattern(regexp = "\\[a-z]{3}-d{6}", message = "Invalid uid pattern!")
+    @Pattern(regexp = "[a-z]{3}-\\d{6}", message = "Invalid uid pattern!")
     @NotBlank
-    private long uid;
+    private String uid;
 
     @NotBlank
     private String name;

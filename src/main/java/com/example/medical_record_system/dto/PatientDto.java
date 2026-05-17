@@ -1,7 +1,9 @@
 package com.example.medical_record_system.dto;
 
+import com.example.medical_record_system.data.entity.Doctor;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
@@ -22,7 +24,10 @@ public class PatientDto {
     @NotBlank
     private String ucn;
 
-    @NotBlank
-    private boolean isInsured;
+    @NotNull
+    private long gpId;
+
+    @NotNull
+    private Boolean isInsured;
 
 }

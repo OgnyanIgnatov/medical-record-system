@@ -1,6 +1,7 @@
 package com.example.medical_record_system.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -16,6 +17,7 @@ public class VisitDto {
     private long id;
 
     @DateTimeFormat
+    @NotNull
     private Date date;
 
     @NotBlank
@@ -24,6 +26,6 @@ public class VisitDto {
     @NotBlank
     private String treatment;
 
-    @NotBlank
+    @NotNull
     private float price;
 }

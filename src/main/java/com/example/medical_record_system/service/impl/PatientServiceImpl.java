@@ -45,7 +45,7 @@ public class PatientServiceImpl implements PatientService {
                 patient1 ->{
                     patient1.setName(patient.getName());
                     patient1.setUcn(patient.getUcn());
-                    patient1.setInsured(patient.isInsured());
+                    patient1.setIsInsured(patient.getIsInsured());
                     patient1.setGp(patient.getGp());
                     patient1.setVisits(patient.getVisits());
                     return this.patientRepo.save(patient1);

@@ -13,9 +13,9 @@ import lombok.*;
 public class DoctorViewModel {
 
     @Column(unique = true)
-    @Pattern(regexp = "\\[a-z]{3}-d{6}", message = "Invalid uid pattern!")
+    @Pattern(regexp = "[a-z]{3}-\\d{6}", message = "Invalid uid pattern!")
     @NotBlank
-    private long uid;
+    private String uid;
 
     @NotBlank
     private String name;

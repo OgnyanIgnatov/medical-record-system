@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,15 +21,15 @@ import java.util.Date;
 public class Visit extends BaseEntity{
 
     @DateTimeFormat
-    @NotBlank
+    @NotNull
     private Date date;
 
     @ManyToOne
-    @NotBlank
+    @NotNull
     private Patient patient;
 
     @ManyToOne
-    @NotBlank
+    @NotNull
     private Doctor doctor;
 
     @NotBlank
@@ -37,7 +38,7 @@ public class Visit extends BaseEntity{
     @NotBlank
     private String treatment;
 
-    @NotBlank
+    @NotNull
     private float price;
 
     @OneToOne

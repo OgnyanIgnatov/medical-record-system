@@ -2,6 +2,7 @@ package com.example.medical_record_system.data.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,11 +27,11 @@ public class Patient extends BaseEntity{
     private String ucn;
 
     @ManyToOne
-    @NotBlank
+    @NotNull
     private Doctor gp;
 
-    @NotBlank
-    private boolean isInsured;
+    @NotNull
+    private Boolean isInsured;
 
     @OneToMany(mappedBy = "patient")
     List<Visit> visits;
