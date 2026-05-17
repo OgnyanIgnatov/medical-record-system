@@ -1,18 +1,17 @@
-package com.example.medical_record_system.web.view.controller.model;
+package com.example.medical_record_system.dto;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
-public class DoctorViewModel {
-
-    private long id;
+public class CreateDoctorDto {
 
     @Column(unique = true)
     @Pattern(regexp = "[a-z]{3}-\\d{6}", message = "Invalid uid pattern!")
@@ -24,5 +23,4 @@ public class DoctorViewModel {
 
     @NotBlank
     private String degree;
-
 }

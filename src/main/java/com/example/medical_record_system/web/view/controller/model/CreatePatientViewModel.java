@@ -27,7 +27,7 @@ public class CreatePatientViewModel {
     private String ucn;
 
     @NotNull
-    private long gpId;
+    private Long gpId;
 
     @NotNull
     private Boolean isInsured;

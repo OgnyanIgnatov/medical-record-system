@@ -25,7 +25,7 @@ public class PatientDto {
     private String ucn;
 
     @NotNull
-    private long gpId;
+    private Long gpId;
 
     @NotNull
     private Boolean isInsured;

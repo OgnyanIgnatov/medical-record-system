@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: head"></head>
+<body>
+<h1>Medical Record</h1>
+<nav th:replace="fragments :: navigation"></nav>
+<h4>Patients:</h4>
+<div class="col-6">
+    <h3 th:if="${patients == null}">There are no patients!</h3>
+    <table th:if="${patients.size()>0}" class="table table-hover">
+        <th>Name</th>
+        <th>UCN</th>
+        <th>GP ID</th>
+        <th>Edit</th>
+        <th>Delete</th>
+        <tr th:each="patient : ${patients}">
+            <td th:text="${patient.name}"></td>
+            <td th:text="${patient.ucn}"></td>
+            <td th:text="${patient.gpId}"></td>
+            <td><a class="btn btn-info" th:href="@{'/patients/edit-patient/'+${patient.id}}">Edit</a></td>
+            <td><a class="btn btn-danger" th:href="@{'/patients/delete/'+${patient.id}}">Delete</a></td>
+        </tr>
+    </table>
+</div>
+<footer th:replace="fragments :: footer"></footer>
+</body>
+</html>

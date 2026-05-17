@@ -1,20 +1,18 @@
-package com.example.medical_record_system.web.view.controller.model;
+package com.example.medical_record_system.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class SickNoteViewModel {
-
-    private long id;
+public class CreateSickNoteDto {
 
     @DateTimeFormat
     @NotNull
@@ -22,5 +20,4 @@ public class SickNoteViewModel {
 
     @NotNull
     private long daysCount;
-
 }

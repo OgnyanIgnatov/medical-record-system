@@ -1,6 +1,7 @@
 package com.example.medical_record_system.web.api;
 
 import com.example.medical_record_system.data.entity.Patient;
+import com.example.medical_record_system.dto.CreatePatientDto;
 import com.example.medical_record_system.dto.PatientDto;
 import com.example.medical_record_system.service.PatientService;
 import com.example.medical_record_system.util.MapperUtil;
@@ -23,7 +24,7 @@ public class PatientApiController {
     public CreatePatientViewModel createPatient(@RequestBody CreatePatientViewModel patientViewModel){
         return this.mapperUtil.getModelMapper().map(this.patientService.createPatient(
                 this.mapperUtil.getModelMapper().map(
-                        patientViewModel, PatientDto.class)), CreatePatientViewModel.class);
+                        patientViewModel, CreatePatientDto.class)), CreatePatientViewModel.class);
     }
 
     @GetMapping

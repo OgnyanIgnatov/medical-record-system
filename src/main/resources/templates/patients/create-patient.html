@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: head"></head>
+<body>
+<h1>Medical Record</h1>
+<nav th:replace="fragments :: navigation"></nav>
+<h4>Create Patient</h4>
+<div class="col-6">
+    <form action="#" th:action="@{/patients/create}" th:object="${patient}" method="post">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input class="form-control" type="text" th:field="*{name}" placeholder="Name" id="name">
+            <span class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</span>
+            <input class="form-control" type="text" th:field="*{ucn}" placeholder="UCN" id="ucn">
+            <span class="text-danger" th:if="${#fields.hasErrors('ucn')}" th:errors="*{ucn}">UCN Error</span>
+            <select class="form-control" type="text" th:field="*{gpId}" placeholder="GP ID" id="gpId">
+                <option value="">Select Your GP</option>
+
+                <option th:each="doctor : ${doctors}" th:value="${doctor.id}" th:text="${doctor.name + ' - ' + doctor.degree}">
+                </option>
+            </select>
+            <span class="text-danger" th:if="${#fields.hasErrors('gpId')}" th:errors="*{gpId}">GP ID Error</span>
+            <input class="form-check-input" type="checkbox" th:field="*{isInsured}" id="isInsured">
+            <label class="form-check-label" for="isInsured">Is insured</label>
+            <span class="text-danger" th:if="${#fields.hasErrors('isInsured')}" th:errors="*{isInsured}">Insurance Error</span>
+        </div>
+        <button type="submit" class="btn btn-primary">Save Patient</button>
+    </form>
+</div>
+<footer th:replace="fragments :: footer"></footer>
+</body>
+</html>

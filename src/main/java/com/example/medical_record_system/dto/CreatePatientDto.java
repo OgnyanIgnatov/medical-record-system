@@ -1,6 +1,5 @@
-package com.example.medical_record_system.web.view.controller.model;
+package com.example.medical_record_system.dto;
 
-import com.example.medical_record_system.data.entity.Doctor;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,9 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class PatientViewModel {
-
-    private long id;
+public class CreatePatientDto {
 
     @NotBlank
     private String name;
@@ -24,9 +21,7 @@ public class PatientViewModel {
     @NotBlank
     private String ucn;
 
-    @NotNull(message = "Please select GP doctor")
-    private Long gpId;
-
     @NotNull
-    private Boolean isInsured;
+    private long gpId;
+
 }

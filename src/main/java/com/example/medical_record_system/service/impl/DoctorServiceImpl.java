@@ -1,5 +1,6 @@
 package com.example.medical_record_system.service.impl;
 
+import com.example.medical_record_system.dto.CreateDoctorDto;
 import com.example.medical_record_system.dto.DoctorDto;
 import com.example.medical_record_system.data.entity.Doctor;
 import com.example.medical_record_system.data.repo.DoctorRepo;
@@ -18,11 +19,11 @@ public class DoctorServiceImpl implements DoctorService {
     private final MapperUtil mapperUtil;
 
     @Override
-    public DoctorDto createDoctor(DoctorDto doctor) {
+    public CreateDoctorDto createDoctor(CreateDoctorDto doctor) {
         return mapperUtil.getModelMapper()
                 .map(this.doctorRepo
                         .save(mapperUtil.getModelMapper()
-                                .map(doctor, Doctor.class)), DoctorDto.class);
+                                .map(doctor, Doctor.class)), CreateDoctorDto.class);
     }
 
     @Override

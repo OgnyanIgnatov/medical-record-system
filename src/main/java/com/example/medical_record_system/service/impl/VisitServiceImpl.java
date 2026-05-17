@@ -2,6 +2,7 @@ package com.example.medical_record_system.service.impl;
 
 import com.example.medical_record_system.data.entity.Visit;
 import com.example.medical_record_system.data.repo.VisitRepo;
+import com.example.medical_record_system.dto.CreateVisitDto;
 import com.example.medical_record_system.dto.SickNoteDto;
 import com.example.medical_record_system.dto.VisitDto;
 import com.example.medical_record_system.service.VisitService;
@@ -18,11 +19,11 @@ public class VisitServiceImpl implements VisitService {
     private final MapperUtil mapperUtil;
 
     @Override
-    public VisitDto createVisit(VisitDto visit) {
+    public CreateVisitDto createVisit(CreateVisitDto visit) {
         return mapperUtil.getModelMapper().map(
                 this.visitRepo.save(
                         mapperUtil.getModelMapper().map(
-                                visit, Visit.class)), VisitDto.class);
+                                visit, Visit.class)), CreateVisitDto.class);
     }
 
     @Override

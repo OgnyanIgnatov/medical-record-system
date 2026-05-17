@@ -1,4 +1,5 @@
-package com.example.medical_record_system.web.view.controller.model;
+package com.example.medical_record_system.dto;
+
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,9 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class VisitViewModel {
-
-    private long id;
+public class CreateVisitDto {
 
     @DateTimeFormat
     @NotNull
@@ -26,6 +25,4 @@ public class VisitViewModel {
     @NotBlank
     private String treatment;
 
-    @NotNull
-    private float price;
 }
