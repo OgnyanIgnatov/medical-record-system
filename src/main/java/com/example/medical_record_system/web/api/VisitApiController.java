@@ -44,7 +44,7 @@ public class VisitApiController {
     }
 
     @PutMapping("/{id}")
-    public Visit updateVisit(@RequestBody Visit visit, @PathVariable long id){
+    public Visit updateVisit(@RequestBody VisitDto visit, @PathVariable long id){
         return this.visitService.updateVisit(visit, id);
     }
 

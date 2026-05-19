@@ -14,7 +14,7 @@ public interface SickNoteService {
 
     SickNoteDto getSickNote(long id);
 
-    SickNote updateSickNote(SickNote sickNote, long id);
+    SickNote updateSickNote(SickNoteDto sickNote, long id);
 
     void deleteSickNote(long id);
 }

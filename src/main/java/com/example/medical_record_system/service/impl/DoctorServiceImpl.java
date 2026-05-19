@@ -42,17 +42,17 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public Doctor updateDoctor(Doctor doctor, long id) {
-        return this.doctorRepo.findById(id)
-                .map(doctor1 -> {
-                    doctor1.setUid(doctor.getUid());
-                    doctor1.setName(doctor.getName());
-                    doctor1.setDegree(doctor.getDegree());
-                    doctor1.setVisits(doctor.getVisits());
-                    doctor1.setPatients(doctor.getPatients());
+    public Doctor updateDoctor(DoctorDto doctor, long id) {
+        Doctor doctorEntity =  this.doctorRepo.findById(doctor.getId()).orElseThrow(() -> new RuntimeException("No such doctor"));
+        return this.doctorRepo.findById(id).map(doctor1 -> {
+                    doctor1.setUid(doctorEntity.getUid());
+                    doctor1.setName(doctorEntity.getName());
+                    doctor1.setDegree(doctorEntity.getDegree());
+                    doctor1.setVisits(doctorEntity.getVisits());
+                    doctor1.setPatients(doctorEntity.getPatients());
                     return this.doctorRepo.save(doctor1);
                 })
-                .orElseGet(() -> this.doctorRepo.save(doctor));
+                .orElseGet(() -> this.doctorRepo.save(doctorEntity));
     }
 
     @Override

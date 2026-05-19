@@ -57,7 +57,7 @@ public class DoctorViewController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateDoctor(Doctor doctor, @PathVariable long id){
+    public String updateDoctor(DoctorDto doctor, @PathVariable long id){
         this.doctorService.updateDoctor(doctor, id);
         return "redirect:/doctors";
     }

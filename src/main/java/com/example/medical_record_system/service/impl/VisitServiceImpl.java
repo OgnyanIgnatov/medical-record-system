@@ -1,9 +1,12 @@
 package com.example.medical_record_system.service.impl;
 
+import com.example.medical_record_system.data.entity.Doctor;
+import com.example.medical_record_system.data.entity.Patient;
 import com.example.medical_record_system.data.entity.Visit;
+import com.example.medical_record_system.data.repo.DoctorRepo;
+import com.example.medical_record_system.data.repo.PatientRepo;
 import com.example.medical_record_system.data.repo.VisitRepo;
 import com.example.medical_record_system.dto.CreateVisitDto;
-import com.example.medical_record_system.dto.SickNoteDto;
 import com.example.medical_record_system.dto.VisitDto;
 import com.example.medical_record_system.service.VisitService;
 import com.example.medical_record_system.util.MapperUtil;
@@ -16,14 +19,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VisitServiceImpl implements VisitService {
     private final VisitRepo visitRepo;
+    private final PatientRepo patientRepo;
+    private final DoctorRepo doctorRepo;
     private final MapperUtil mapperUtil;
 
     @Override
     public CreateVisitDto createVisit(CreateVisitDto visit) {
+        Visit visitEntity = mapperUtil.getModelMapper().map(visit, Visit.class);
+
+        Patient patient = patientRepo.findById(visit.getPatientId())
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
+
+        Doctor doctor = doctorRepo.findById(visit.getDoctorId())
+                .orElseThrow(() -> new RuntimeException("Doctor not found"));
+
+        visitEntity.setPatient(patient);
+        visitEntity.setDoctor(doctor);
+
         return mapperUtil.getModelMapper().map(
-                this.visitRepo.save(
-                        mapperUtil.getModelMapper().map(
-                                visit, Visit.class)), CreateVisitDto.class);
+                this.visitRepo.save(visitEntity),
+                CreateVisitDto.class
+        );
     }
 
     @Override
@@ -41,18 +57,23 @@ public class VisitServiceImpl implements VisitService {
     }
 
     @Override
-    public Visit updateVisit(Visit visit, long id) {
-        return this.visitRepo.findById(id).map(
-                visit1 -> {
-                    visit1.setPatient(visit.getPatient());
-                    visit1.setDoctor(visit.getDoctor());
-                    visit1.setDate(visit.getDate());
-                    visit1.setPrice(visit.getPrice());
-                    visit1.setDiagnosis(visit.getDiagnosis());
-                    visit1.setTreatment(visit.getTreatment());
-                    return this.visitRepo.save(visit1);
-                }
-        ).orElseGet(() -> this.visitRepo.save(visit));
+    public Visit updateVisit(VisitDto visit, long id) {
+        return this.visitRepo.findById(id).map(visitEntity -> {
+            Patient patient = patientRepo.findById(visit.getPatientId())
+                    .orElseThrow(() -> new RuntimeException("Patient not found"));
+
+            Doctor doctor = doctorRepo.findById(visit.getDoctorId())
+                    .orElseThrow(() -> new RuntimeException("Doctor not found"));
+
+            visitEntity.setDate(visit.getDate());
+            visitEntity.setPatient(patient);
+            visitEntity.setDoctor(doctor);
+            visitEntity.setDiagnosis(visit.getDiagnosis());
+            visitEntity.setTreatment(visit.getTreatment());
+            visitEntity.setPrice(visit.getPrice());
+
+            return this.visitRepo.save(visitEntity);
+        }).orElseThrow(() -> new RuntimeException("There is no visit with such id!"));
     }
 
     @Override

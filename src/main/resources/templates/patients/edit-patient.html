@@ -6,7 +6,7 @@
 <nav th:replace="fragments :: navigation"></nav>
 <h4>Create Patient</h4>
 <div class="col-6">
-    <form action="#" th:action="@{/patients/create}" th:object="${patient}" method="post">
+    <form action="#" th:action="@{/patients/update/{id}(id=${patient.id})}" th:object="${patient}" method="post">
         <div class="form-group">
             <label for="name">Name</label>
             <input class="form-control" type="text" th:field="*{name}" placeholder="Name" id="name">

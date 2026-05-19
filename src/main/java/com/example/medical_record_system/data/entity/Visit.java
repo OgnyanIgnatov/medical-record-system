@@ -3,6 +3,7 @@ package com.example.medical_record_system.data.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -39,6 +40,7 @@ public class Visit extends BaseEntity{
     private String treatment;
 
     @NotNull
+    @DecimalMin(value = "0.0", message = "Price cannot be negative")
     private float price;
 
     @OneToOne

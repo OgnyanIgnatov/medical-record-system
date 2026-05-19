@@ -42,7 +42,7 @@ public class SickNoteApiController {
     }
 
     @PutMapping("/{id}")
-    public SickNote updateSickNote(@RequestBody SickNote sickNote, @PathVariable long id){
+    public SickNote updateSickNote(@RequestBody SickNoteDto sickNote, @PathVariable long id){
         return this.sickNoteService.updateSickNote(sickNote, id);
     }
 

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head}"></head>
+<body>
+<h1>Medical Record</h1>
+<nav th:replace="~{fragments :: navigation}"></nav>
+
+<h4>Edit Sick Note</h4>
+
+<div class="col-6">
+    <form action="#" th:action="@{/sick-notes/update/{id}(id=${sickNote.id})}" th:object="${sickNote}" method="post">
+        <div class="form-group">
+            <label for="issuedDate">Issued Date</label>
+            <input class="form-control" type="date" th:field="*{issuedDate}" id="issuedDate">
+            <span class="text-danger" th:if="${#fields.hasErrors('issuedDate')}" th:errors="*{issuedDate}">Issued Date Error</span>
+
+            <label for="daysCount">Days Count</label>
+            <input class="form-control" type="number" th:field="*{daysCount}" placeholder="Days Count" id="daysCount">
+            <span class="text-danger" th:if="${#fields.hasErrors('daysCount')}" th:errors="*{daysCount}">Days Count Error</span>
+
+            <label for="visitId">Visit</label>
+            <select class="form-control" th:field="*{visitId}" id="visitId">
+                <option value="">Select Visit</option>
+                <option th:each="visit : ${visits}"
+                        th:value="${visit.id}"
+                        th:text="${'Visit #' + visit.id + ' - ' + visit.diagnosis}">
+                </option>
+            </select>
+            <span class="text-danger" th:if="${#fields.hasErrors('visitId')}" th:errors="*{visitId}">Visit Error</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Sick Note</button>
+    </form>
+</div>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

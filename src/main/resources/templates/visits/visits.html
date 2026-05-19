@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head}"></head>
+<body>
+<h1>Medical Record</h1>
+<nav th:replace="~{fragments :: navigation}"></nav>
+
+<h4>Visits:</h4>
+
+<div class="col-8">
+    <a class="btn btn-primary mb-3" th:href="@{/visits/create-visit}">Create Visit</a>
+
+    <h3 th:if="${visits == null || visits.size() == 0}">There are no visits!</h3>
+
+    <table th:if="${visits != null && visits.size() > 0}" class="table table-hover">
+        <tr>
+            <th>Date</th>
+            <th>Patient ID</th>
+            <th>Doctor ID</th>
+            <th>Diagnosis</th>
+            <th>Treatment</th>
+            <th>Price</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+
+        <tr th:each="visit : ${visits}">
+            <td th:text="${#dates.format(visit.date, 'yyyy-MM-dd')}"></td>
+            <td th:text="${visit.patientId}"></td>
+            <td th:text="${visit.doctorId}"></td>
+            <td th:text="${visit.diagnosis}"></td>
+            <td th:text="${visit.treatment}"></td>
+            <td th:text="${visit.price}"></td>
+            <td><a class="btn btn-info" th:href="@{'/visits/edit-visit/' + ${visit.id}}">Edit</a></td>
+            <td><a class="btn btn-danger" th:href="@{'/visits/delete/' + ${visit.id}}">Delete</a></td>
+        </tr>
+    </table>
+</div>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

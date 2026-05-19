@@ -1,7 +1,9 @@
 package com.example.medical_record_system.service.impl;
 
 import com.example.medical_record_system.data.entity.SickNote;
+import com.example.medical_record_system.data.entity.Visit;
 import com.example.medical_record_system.data.repo.SickNoteRepo;
+import com.example.medical_record_system.data.repo.VisitRepo;
 import com.example.medical_record_system.dto.CreateSickNoteDto;
 import com.example.medical_record_system.dto.SickNoteDto;
 import com.example.medical_record_system.service.SickNoteService;
@@ -15,15 +17,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SickNoteServiceImpl implements SickNoteService {
     private final SickNoteRepo sickNoteRepo;
+    private final VisitRepo visitRepo;
     private final MapperUtil mapperUtil;
 
     @Override
     public CreateSickNoteDto createSickNote(CreateSickNoteDto sickNote) {
+        SickNote sickNoteEntity = mapperUtil.getModelMapper().map(sickNote, SickNote.class);
+
+        Visit visit = visitRepo.findById(sickNote.getVisitId())
+                .orElseThrow(() -> new RuntimeException("Visit not found"));
+
+        sickNoteEntity.setVisit(visit);
+
         return mapperUtil.getModelMapper().map(
-                this.sickNoteRepo.save(
-                        mapperUtil.getModelMapper().map(
-                                sickNote, SickNote.class
-                        )), CreateSickNoteDto.class
+                this.sickNoteRepo.save(sickNoteEntity),
+                CreateSickNoteDto.class
         );
     }
 
@@ -43,15 +51,17 @@ public class SickNoteServiceImpl implements SickNoteService {
     }
 
     @Override
-    public SickNote updateSickNote(SickNote sickNote, long id) {
-        return this.sickNoteRepo.findById(id).map(
-                sickNote1 -> {
-                    sickNote1.setIssuedDate(sickNote.getIssuedDate());
-                    sickNote1.setVisit(sickNote.getVisit());
-                    sickNote1.setDaysCount(sickNote.getDaysCount());
-                    return this.sickNoteRepo.save(sickNote1);
-                }
-        ).orElseGet(() -> this.sickNoteRepo.save(sickNote));
+    public SickNote updateSickNote(SickNoteDto sickNote, long id) {
+        return this.sickNoteRepo.findById(id).map(sickNoteEntity -> {
+            Visit visit = visitRepo.findById(sickNote.getVisitId())
+                    .orElseThrow(() -> new RuntimeException("Visit not found"));
+
+            sickNoteEntity.setIssuedDate(sickNote.getIssuedDate());
+            sickNoteEntity.setDaysCount(sickNote.getDaysCount());
+            sickNoteEntity.setVisit(visit);
+
+            return this.sickNoteRepo.save(sickNoteEntity);
+        }).orElseThrow(() -> new RuntimeException("There is no sick note with such id"));
     }
 
     @Override

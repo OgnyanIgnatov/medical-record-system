@@ -14,7 +14,7 @@ public interface VisitService {
 
     VisitDto getVisit(long id);
 
-    Visit updateVisit(Visit visit, long id);
+    Visit updateVisit(VisitDto visit, long id);
 
     void deleteVisit(long id);
 }

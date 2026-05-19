@@ -2,6 +2,7 @@ package com.example.medical_record_system.web.view.controller;
 
 import com.example.medical_record_system.data.entity.Patient;
 import com.example.medical_record_system.dto.CreatePatientDto;
+import com.example.medical_record_system.dto.PatientDto;
 import com.example.medical_record_system.service.DoctorService;
 import com.example.medical_record_system.service.PatientService;
 import com.example.medical_record_system.util.MapperUtil;
@@ -54,11 +55,12 @@ public class PatientViewController {
     @GetMapping("/edit-patient/{id}")
     public String showEditPatientForm(Model model, @PathVariable long id) {
         model.addAttribute("patient", this.patientService.getPatient(id));
+        model.addAttribute("doctors", doctorService.getDoctors());
         return "patients/edit-patient";
     }
 
     @PostMapping("/update/{id}")
-    public String updatePatient(@PathVariable long id, Patient patient) {
+    public String updatePatient(@PathVariable long id, PatientDto patient) {
         this.patientService.updatePatient(patient, id);
         return "redirect:/patients";
     }

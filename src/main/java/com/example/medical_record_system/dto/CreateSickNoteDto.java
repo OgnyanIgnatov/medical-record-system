@@ -6,7 +6,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,10 +13,13 @@ import java.util.Date;
 @ToString
 public class CreateSickNoteDto {
 
-    @DateTimeFormat
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull
     private Date issuedDate;
 
     @NotNull
-    private long daysCount;
+    private Long daysCount;
+
+    @NotNull
+    private Long visitId;
 }

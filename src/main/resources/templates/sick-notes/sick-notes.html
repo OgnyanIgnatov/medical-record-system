@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head}"></head>
+<body>
+<h1>Medical Record</h1>
+<nav th:replace="~{fragments :: navigation}"></nav>
+
+<h4>Sick Notes:</h4>
+
+<div class="col-8">
+    <a class="btn btn-primary mb-3" th:href="@{/sick-notes/create-sick-note}">Create Sick Note</a>
+
+    <h3 th:if="${sickNotes == null || sickNotes.size() == 0}">There are no sick notes!</h3>
+
+    <table th:if="${sickNotes != null && sickNotes.size() > 0}" class="table table-hover">
+        <tr>
+            <th>Issued Date</th>
+            <th>Days Count</th>
+            <th>Visit ID</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+
+        <tr th:each="sickNote : ${sickNotes}">
+            <td th:text="${#dates.format(sickNote.issuedDate, 'yyyy-MM-dd')}"></td>
+            <td th:text="${sickNote.daysCount}"></td>
+            <td th:text="${sickNote.visitId}"></td>
+            <td><a class="btn btn-info" th:href="@{'/sick-notes/edit-sick-note/' + ${sickNote.id}}">Edit</a></td>
+            <td><a class="btn btn-danger" th:href="@{'/sick-notes/delete/' + ${sickNote.id}}">Delete</a></td>
+        </tr>
+    </table>
+</div>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

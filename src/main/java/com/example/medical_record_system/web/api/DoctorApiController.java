@@ -40,7 +40,7 @@ public class DoctorApiController {
     }
 
     @PutMapping("/{id}")
-    public Doctor updateDoctor(@RequestBody Doctor doctor, @PathVariable long id){
+    public Doctor updateDoctor(@RequestBody DoctorDto doctor, @PathVariable long id){
         return this.doctorService.updateDoctor(doctor, id);
     }
 
