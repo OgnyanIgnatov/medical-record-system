@@ -18,13 +18,13 @@ public class CreatePatientDto {
 
     @Column(unique = true)
     @Pattern(regexp = "\\d{10}", message = "Invalid ID number")
-    @NotBlank
+    @NotBlank(message = "UCN is required")
     private String ucn;
 
-    @NotNull
+    @NotNull(message = "GP ID is required")
     private Long gpId;
 
-    @NotNull
+    @NotNull(message = "Insurance info is required")
     private Boolean isInsured;
 
 }

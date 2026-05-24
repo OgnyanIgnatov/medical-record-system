@@ -6,6 +6,8 @@ import com.example.medical_record_system.data.repo.DoctorRepo;
 import com.example.medical_record_system.data.repo.PatientRepo;
 import com.example.medical_record_system.dto.CreatePatientDto;
 import com.example.medical_record_system.dto.PatientDto;
+import com.example.medical_record_system.exception.DoctorNotFoundException;
+import com.example.medical_record_system.exception.PatientNotFoundException;
 import com.example.medical_record_system.service.PatientService;
 import com.example.medical_record_system.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
@@ -22,11 +24,17 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public CreatePatientDto createPatient(CreatePatientDto patient) {
-        Patient patient1 = mapperUtil.getModelMapper().map(patient, Patient.class);
-        patient1.setGp(
-                this.doctorRepo.findById(patient.getGpId()).orElseThrow(()-> new RuntimeException("Cant Find Doctor"))
+        Patient patientEntity = mapperUtil.getModelMapper().map(patient, Patient.class);
+
+        Doctor gp = this.doctorRepo.findById(patient.getGpId())
+                .orElseThrow(() -> new DoctorNotFoundException("Doctor with id=" + patient.getGpId() + " not found!"));
+
+        patientEntity.setGp(gp);
+
+        return mapperUtil.getModelMapper().map(
+                this.patientRepo.save(patientEntity),
+                CreatePatientDto.class
         );
-        return mapperUtil.getModelMapper().map(this.patientRepo.save(patient1), CreatePatientDto.class);
     }
 
     @Override
@@ -40,27 +48,34 @@ public class PatientServiceImpl implements PatientService {
     public PatientDto getPatient(long id) {
         return mapperUtil.getModelMapper().map(
                 this.patientRepo.findById(id)
-                        .orElseThrow(() -> new RuntimeException("There is not a patient with given id")), PatientDto.class
+                        .orElseThrow(() -> new PatientNotFoundException("Patient with id=" + id + " not found!")),
+                PatientDto.class
         );
     }
 
     @Override
     public Patient updatePatient(PatientDto patient, long id) {
-        return this.patientRepo.findById(id).map(patient1 -> {
-            patient1.setName(patient.getName());
-            patient1.setUcn(patient.getUcn());
-            patient1.setIsInsured(patient.getIsInsured());
-            Doctor gp = doctorRepo.findById(patient.getGpId())
-                        .orElseThrow(() -> new RuntimeException("Doctor not found"));
-                patient1.setGp(gp);
-            return this.patientRepo.save(patient1);
-        }).orElseGet(() -> this.patientRepo.save(this.mapperUtil.getModelMapper().map(
-                patient, Patient.class
-        )));
+        return this.patientRepo.findById(id)
+                .map(patientEntity -> {
+                    Doctor gp = doctorRepo.findById(patient.getGpId())
+                            .orElseThrow(() -> new DoctorNotFoundException("Doctor with id=" + patient.getGpId() + " not found!"));
+
+                    patientEntity.setName(patient.getName());
+                    patientEntity.setUcn(patient.getUcn());
+                    patientEntity.setIsInsured(patient.getIsInsured());
+                    patientEntity.setGp(gp);
+
+                    return this.patientRepo.save(patientEntity);
+                })
+                .orElseThrow(() -> new PatientNotFoundException("Patient with id=" + id + " not found!"));
     }
 
     @Override
     public void deletePatient(long id) {
+        if (!this.patientRepo.existsById(id)) {
+            throw new PatientNotFoundException("Patient with id=" + id + " not found!");
+        }
+
         this.patientRepo.deleteById(id);
     }
 }

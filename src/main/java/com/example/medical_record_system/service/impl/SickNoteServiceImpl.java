@@ -6,6 +6,8 @@ import com.example.medical_record_system.data.repo.SickNoteRepo;
 import com.example.medical_record_system.data.repo.VisitRepo;
 import com.example.medical_record_system.dto.CreateSickNoteDto;
 import com.example.medical_record_system.dto.SickNoteDto;
+import com.example.medical_record_system.exception.SickNoteNotFoundException;
+import com.example.medical_record_system.exception.VisitNotFoundException;
 import com.example.medical_record_system.service.SickNoteService;
 import com.example.medical_record_system.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +27,7 @@ public class SickNoteServiceImpl implements SickNoteService {
         SickNote sickNoteEntity = mapperUtil.getModelMapper().map(sickNote, SickNote.class);
 
         Visit visit = visitRepo.findById(sickNote.getVisitId())
-                .orElseThrow(() -> new RuntimeException("Visit not found"));
+                .orElseThrow(() -> new VisitNotFoundException("Visit with id=" + sickNote.getVisitId() + " not found!"));
 
         sickNoteEntity.setVisit(visit);
 
@@ -46,26 +48,33 @@ public class SickNoteServiceImpl implements SickNoteService {
     public SickNoteDto getSickNote(long id) {
         return mapperUtil.getModelMapper().map(
                 this.sickNoteRepo.findById(id)
-                        .orElseThrow( () -> new RuntimeException("There is no sick note with such id")),
-                                SickNoteDto.class);
+                        .orElseThrow(() -> new SickNoteNotFoundException("Sick note with id=" + id + " not found!")),
+                SickNoteDto.class
+        );
     }
 
     @Override
     public SickNote updateSickNote(SickNoteDto sickNote, long id) {
-        return this.sickNoteRepo.findById(id).map(sickNoteEntity -> {
-            Visit visit = visitRepo.findById(sickNote.getVisitId())
-                    .orElseThrow(() -> new RuntimeException("Visit not found"));
+        return this.sickNoteRepo.findById(id)
+                .map(sickNoteEntity -> {
+                    Visit visit = visitRepo.findById(sickNote.getVisitId())
+                            .orElseThrow(() -> new VisitNotFoundException("Visit with id=" + sickNote.getVisitId() + " not found!"));
 
-            sickNoteEntity.setIssuedDate(sickNote.getIssuedDate());
-            sickNoteEntity.setDaysCount(sickNote.getDaysCount());
-            sickNoteEntity.setVisit(visit);
+                    sickNoteEntity.setIssuedDate(sickNote.getIssuedDate());
+                    sickNoteEntity.setDaysCount(sickNote.getDaysCount());
+                    sickNoteEntity.setVisit(visit);
 
-            return this.sickNoteRepo.save(sickNoteEntity);
-        }).orElseThrow(() -> new RuntimeException("There is no sick note with such id"));
+                    return this.sickNoteRepo.save(sickNoteEntity);
+                })
+                .orElseThrow(() -> new SickNoteNotFoundException("Sick note with id=" + id + " not found!"));
     }
 
     @Override
     public void deleteSickNote(long id) {
+        if (!this.sickNoteRepo.existsById(id)) {
+            throw new SickNoteNotFoundException("Sick note with id=" + id + " not found!");
+        }
+
         this.sickNoteRepo.deleteById(id);
     }
 }

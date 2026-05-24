@@ -18,22 +18,22 @@ public class VisitViewModel {
     private long id;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @NotNull
+    @NotNull(message = "Date is required")
     private Date date;
 
-    @NotNull
+    @NotNull(message = "Patient is required")
     private Long patientId;
 
-    @NotNull
+    @NotNull(message = "Doctor is required")
     private Long doctorId;
 
-    @NotBlank
+    @NotBlank(message = "Diagnosis is required")
     private String diagnosis;
 
-    @NotBlank
+    @NotBlank(message = "Treatment is required")
     private String treatment;
 
-    @NotNull
+    @NotNull(message = "Price is required")
     @DecimalMin(value = "0.0", message = "Price cannot be negative")
     private Float price;
 }

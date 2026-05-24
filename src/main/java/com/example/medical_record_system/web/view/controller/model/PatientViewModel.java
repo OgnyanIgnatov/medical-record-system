@@ -21,12 +21,12 @@ public class PatientViewModel {
 
     @Column(unique = true)
     @Pattern(regexp = "\\d{10}", message = "Invalid ID number")
-    @NotBlank
+    @NotBlank(message = "UCN is required")
     private String ucn;
 
     @NotNull(message = "Please select GP doctor")
     private Long gpId;
 
-    @NotNull
+    @NotNull(message = "Insurance info is required")
     private Boolean isInsured;
 }

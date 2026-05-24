@@ -8,6 +8,9 @@ import com.example.medical_record_system.data.repo.PatientRepo;
 import com.example.medical_record_system.data.repo.VisitRepo;
 import com.example.medical_record_system.dto.CreateVisitDto;
 import com.example.medical_record_system.dto.VisitDto;
+import com.example.medical_record_system.exception.DoctorNotFoundException;
+import com.example.medical_record_system.exception.PatientNotFoundException;
+import com.example.medical_record_system.exception.VisitNotFoundException;
 import com.example.medical_record_system.service.VisitService;
 import com.example.medical_record_system.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +31,10 @@ public class VisitServiceImpl implements VisitService {
         Visit visitEntity = mapperUtil.getModelMapper().map(visit, Visit.class);
 
         Patient patient = patientRepo.findById(visit.getPatientId())
-                .orElseThrow(() -> new RuntimeException("Patient not found"));
+                .orElseThrow(() -> new PatientNotFoundException("Patient with id=" + visit.getPatientId() + " not found!"));
 
         Doctor doctor = doctorRepo.findById(visit.getDoctorId())
-                .orElseThrow(() -> new RuntimeException("Doctor not found"));
+                .orElseThrow(() -> new DoctorNotFoundException("Doctor with id=" + visit.getDoctorId() + " not found!"));
 
         visitEntity.setPatient(patient);
         visitEntity.setDoctor(doctor);
@@ -52,32 +55,39 @@ public class VisitServiceImpl implements VisitService {
     public VisitDto getVisit(long id) {
         return mapperUtil.getModelMapper().map(
                 this.visitRepo.findById(id)
-                        .orElseThrow( () -> new RuntimeException("There is no sick note with such id")),
-                VisitDto.class);
+                        .orElseThrow(() -> new VisitNotFoundException("Visit with id=" + id + " not found!")),
+                VisitDto.class
+        );
     }
 
     @Override
     public Visit updateVisit(VisitDto visit, long id) {
-        return this.visitRepo.findById(id).map(visitEntity -> {
-            Patient patient = patientRepo.findById(visit.getPatientId())
-                    .orElseThrow(() -> new RuntimeException("Patient not found"));
+        return this.visitRepo.findById(id)
+                .map(visitEntity -> {
+                    Patient patient = patientRepo.findById(visit.getPatientId())
+                            .orElseThrow(() -> new PatientNotFoundException("Patient with id=" + visit.getPatientId() + " not found!"));
 
-            Doctor doctor = doctorRepo.findById(visit.getDoctorId())
-                    .orElseThrow(() -> new RuntimeException("Doctor not found"));
+                    Doctor doctor = doctorRepo.findById(visit.getDoctorId())
+                            .orElseThrow(() -> new DoctorNotFoundException("Doctor with id=" + visit.getDoctorId() + " not found!"));
 
-            visitEntity.setDate(visit.getDate());
-            visitEntity.setPatient(patient);
-            visitEntity.setDoctor(doctor);
-            visitEntity.setDiagnosis(visit.getDiagnosis());
-            visitEntity.setTreatment(visit.getTreatment());
-            visitEntity.setPrice(visit.getPrice());
+                    visitEntity.setDate(visit.getDate());
+                    visitEntity.setPatient(patient);
+                    visitEntity.setDoctor(doctor);
+                    visitEntity.setPrice(visit.getPrice());
+                    visitEntity.setDiagnosis(visit.getDiagnosis());
+                    visitEntity.setTreatment(visit.getTreatment());
 
-            return this.visitRepo.save(visitEntity);
-        }).orElseThrow(() -> new RuntimeException("There is no visit with such id!"));
+                    return this.visitRepo.save(visitEntity);
+                })
+                .orElseThrow(() -> new VisitNotFoundException("Visit with id=" + id + " not found!"));
     }
 
     @Override
     public void deleteVisit(long id) {
+        if (!this.visitRepo.existsById(id)) {
+            throw new VisitNotFoundException("Visit with id=" + id + " not found!");
+        }
+
         this.visitRepo.deleteById(id);
     }
 }

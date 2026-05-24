@@ -16,12 +16,12 @@ public class DoctorDto {
 
     @Column(unique = true)
     @Pattern(regexp = "[a-z]{3}-\\d{6}", message = "Invalid uid pattern!")
-    @NotBlank
+    @NotBlank(message = "UID is required")
     private String uid;
 
-    @NotBlank
+    @NotBlank(message = "Name is required")
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "Degree is required")
     private String degree;
 }

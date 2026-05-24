@@ -1,5 +1,6 @@
 package com.example.medical_record_system.dto;
 
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -15,21 +16,22 @@ import java.util.Date;
 public class CreateVisitDto {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @NotNull
+    @NotNull(message = "Date is required")
     private Date date;
 
-    @NotNull
+    @NotNull(message = "Please select patient")
     private Long patientId;
 
-    @NotNull
+    @NotNull(message = "Please select doctor")
     private Long doctorId;
 
-    @NotBlank
+    @NotNull(message = "Diagnosis is required")
     private String diagnosis;
 
-    @NotBlank
+    @NotBlank(message = "Treatment is required")
     private String treatment;
 
-    @NotNull
+    @NotNull(message = "Price is required")
+    @DecimalMin(value = "0.0", message = "Price cannot be negative")
     private Float price;
 }

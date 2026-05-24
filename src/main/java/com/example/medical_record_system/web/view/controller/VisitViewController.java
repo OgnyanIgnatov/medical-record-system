@@ -28,11 +28,7 @@ public class VisitViewController {
     private final MapperUtil mapperUtil;
 
     @PostMapping("/create")
-    public String createVisit(
-            @Valid @ModelAttribute("visit") CreateVisitViewModel visitViewModel,
-            BindingResult bindingResult,
-            Model model
-    ) {
+    public String createVisit(@Valid @ModelAttribute("visit") CreateVisitViewModel visitViewModel, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("patients", patientService.getPatients());
             model.addAttribute("doctors", doctorService.getDoctors());
@@ -73,12 +69,7 @@ public class VisitViewController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateVisit(
-            @PathVariable long id,
-            @Valid @ModelAttribute("visit") VisitDto visit,
-            BindingResult bindingResult,
-            Model model
-    ) {
+    public String updateVisit(@PathVariable long id, @Valid @ModelAttribute("visit") VisitDto visit, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("patients", patientService.getPatients());
             model.addAttribute("doctors", doctorService.getDoctors());

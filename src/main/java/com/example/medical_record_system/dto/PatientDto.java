@@ -16,18 +16,18 @@ public class PatientDto {
 
     private long id;
 
-    @NotBlank
+    @NotBlank(message = "Name is required")
     private String name;
 
     @Column(unique = true)
     @Pattern(regexp = "\\d{10}", message = "Invalid ID number")
-    @NotBlank
+    @NotBlank(message = "UCN is required")
     private String ucn;
 
-    @NotNull
+    @NotNull(message = "Select GP doctor")
     private Long gpId;
 
-    @NotNull
+    @NotNull(message = "Select insurance status")
     private Boolean isInsured;
 
 }

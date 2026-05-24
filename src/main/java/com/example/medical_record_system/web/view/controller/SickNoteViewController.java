@@ -26,11 +26,7 @@ public class SickNoteViewController {
     private final MapperUtil mapperUtil;
 
     @PostMapping("/create")
-    public String createSickNote(
-            @Valid @ModelAttribute("sickNote") CreateSickNoteViewModel sickNoteViewModel,
-            BindingResult bindingResult,
-            Model model
-    ) {
+    public String createSickNote(@Valid @ModelAttribute("sickNote") CreateSickNoteViewModel sickNoteViewModel, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("visits", visitService.getVisits());
             return "sick-notes/create-sick-note";
@@ -68,12 +64,7 @@ public class SickNoteViewController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateSickNote(
-            @PathVariable long id,
-            @Valid @ModelAttribute("sickNote") SickNoteDto sickNote,
-            BindingResult bindingResult,
-            Model model
-    ) {
+    public String updateSickNote(@PathVariable long id, @Valid @ModelAttribute("sickNote") SickNoteDto sickNote, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("visits", visitService.getVisits());
             return "sick-notes/edit-sick-note";

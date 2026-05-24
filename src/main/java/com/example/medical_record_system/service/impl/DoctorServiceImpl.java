@@ -4,6 +4,7 @@ import com.example.medical_record_system.dto.CreateDoctorDto;
 import com.example.medical_record_system.dto.DoctorDto;
 import com.example.medical_record_system.data.entity.Doctor;
 import com.example.medical_record_system.data.repo.DoctorRepo;
+import com.example.medical_record_system.exception.DoctorNotFoundException;
 import com.example.medical_record_system.service.DoctorService;
 import com.example.medical_record_system.util.MapperUtil;
 import lombok.RequiredArgsConstructor;
@@ -37,26 +38,28 @@ public class DoctorServiceImpl implements DoctorService {
         return this.mapperUtil.getModelMapper().map(
                 this.doctorRepo
                         .findById(id)
-                        .orElseThrow( () -> new RuntimeException("There is no doctor with such id!")),
+                        .orElseThrow(() -> new DoctorNotFoundException("Doctor with id=" + id + " not found!")),
                 DoctorDto.class);
     }
 
     @Override
     public Doctor updateDoctor(DoctorDto doctor, long id) {
-        Doctor doctorEntity =  this.doctorRepo.findById(doctor.getId()).orElseThrow(() -> new RuntimeException("No such doctor"));
-        return this.doctorRepo.findById(id).map(doctor1 -> {
-                    doctor1.setUid(doctorEntity.getUid());
-                    doctor1.setName(doctorEntity.getName());
-                    doctor1.setDegree(doctorEntity.getDegree());
-                    doctor1.setVisits(doctorEntity.getVisits());
-                    doctor1.setPatients(doctorEntity.getPatients());
-                    return this.doctorRepo.save(doctor1);
+        return this.doctorRepo.findById(id)
+                .map(doctorEntity -> {
+                    doctorEntity.setUid(doctor.getUid());
+                    doctorEntity.setName(doctor.getName());
+                    doctorEntity.setDegree(doctor.getDegree());
+                    return this.doctorRepo.save(doctorEntity);
                 })
-                .orElseGet(() -> this.doctorRepo.save(doctorEntity));
+                .orElseThrow(() -> new DoctorNotFoundException("Doctor with id=" + id + " not found!"));
     }
 
     @Override
     public void deleteDoctor(long id) {
+        if (!this.doctorRepo.existsById(id)) {
+            throw new DoctorNotFoundException("Doctor with id=" + id + " not found!");
+        }
+
         this.doctorRepo.deleteById(id);
     }
 }

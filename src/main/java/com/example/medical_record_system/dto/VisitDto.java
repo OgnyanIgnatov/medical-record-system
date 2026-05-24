@@ -14,26 +14,25 @@ import java.util.Date;
 @AllArgsConstructor
 @ToString
 public class VisitDto {
-
     private long id;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @NotNull
+    @NotNull(message = "Date is required")
     private Date date;
 
-    @NotNull
+    @NotNull(message = "Please select patient")
     private Long patientId;
 
-    @NotNull
+    @NotNull(message = "Please select doctor")
     private Long doctorId;
 
-    @NotBlank
+    @NotNull(message = "Diagnosis is required")
     private String diagnosis;
 
-    @NotBlank
+    @NotBlank(message = "Treatment is required")
     private String treatment;
 
-    @NotNull
+    @NotNull(message = "Price is required")
     @DecimalMin(value = "0.0", message = "Price cannot be negative")
     private Float price;
 }
