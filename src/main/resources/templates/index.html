@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments :: head">
-</head>
+<head th:replace="~{fragments :: head}"></head>
 <body>
-<h1>Medical Record</h1>
-<nav th:replace="fragments :: navigation"></nav>
-<h1 th:text="'Hello and  ' + ${welcome}"></h1>
-<footer th:replace="fragments :: footer"></footer>
+<nav th:replace="~{fragments :: navigation}"></nav>
+
+<main class="page-shell">
+    <div class="dashboard-card">
+        <h2>Medical Record System</h2>
+        <p class="text-muted">Welcome to the medical record management system.</p>
+        <a class="btn btn-primary" th:href="@{/dashboard}">Go to Dashboard</a>
+    </div>
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
 </body>
 </html>

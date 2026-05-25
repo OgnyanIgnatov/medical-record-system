@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head}"></head>
+<body>
+<nav th:replace="~{fragments :: navigation}"></nav>
+
+<main class="page-shell">
+    <h2 class="page-title">Sick Note Reports</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-6 mb-4">
+            <div class="dashboard-card">
+                <h5>Month With Most Sick Notes</h5>
+
+                <div th:if="${monthWithMostSickNotes != null}">
+                    <h2>
+                        Month
+                        <span th:text="${monthWithMostSickNotes.key}">0</span>
+                    </h2>
+                    <p>
+                        Issued sick notes:
+                        <strong th:text="${monthWithMostSickNotes.value}">0</strong>
+                    </p>
+                </div>
+
+                <p th:if="${monthWithMostSickNotes == null}" class="mb-0">
+                    No sick notes available.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="dashboard-card">
+                <h5>Doctor With Most Sick Notes</h5>
+
+                <div th:if="${doctorWithMostSickNotes != null}">
+                    <h2 th:text="${doctorWithMostSickNotes.key}">Doctor</h2>
+                    <p>
+                        Issued sick notes:
+                        <strong th:text="${doctorWithMostSickNotes.value}">0</strong>
+                    </p>
+                </div>
+
+                <p th:if="${doctorWithMostSickNotes == null}" class="mb-0">
+                    No sick notes available.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-card">
+        <h4>Sick Notes by Month</h4>
+
+        <h5 th:if="${sickNotesByMonth == null || sickNotesByMonth.size() == 0}">
+            No sick note data found.
+        </h5>
+
+        <div class="table-responsive" th:if="${sickNotesByMonth != null && sickNotesByMonth.size() > 0}">
+            <table class="table table-hover mb-0">
+                <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Sick Notes Count</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="row : ${sickNotesByMonth}">
+                    <td th:text="${row.key}"></td>
+                    <td th:text="${row.value}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="table-card mt-4">
+        <h4>Sick Notes by Doctor</h4>
+
+        <h5 th:if="${sickNotesByDoctor == null || sickNotesByDoctor.size() == 0}">
+            No sick note data found.
+        </h5>
+
+        <div class="table-responsive" th:if="${sickNotesByDoctor != null && sickNotesByDoctor.size() > 0}">
+            <table class="table table-hover mb-0">
+                <thead>
+                <tr>
+                    <th>Doctor</th>
+                    <th>Sick Notes Count</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="row : ${sickNotesByDoctor}">
+                    <td th:text="${row.key}"></td>
+                    <td th:text="${row.value}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <a class="btn btn-secondary mt-3" th:href="@{/reports}">Back to Reports</a>
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

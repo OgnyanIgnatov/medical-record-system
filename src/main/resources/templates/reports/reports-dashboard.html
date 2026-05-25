@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head}"></head>
+<body>
+<nav th:replace="~{fragments :: navigation}"></nav>
+
+<main class="page-shell">
+    <h2 class="page-title">Reports</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="dashboard-card">
+                <h5>Total Patients</h5>
+                <h2 th:text="${patientsCount}">0</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="dashboard-card">
+                <h5>Total Visits</h5>
+                <h2 th:text="${visitsCount}">0</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="dashboard-card">
+                <h5>Total Sick Notes</h5>
+                <h2 th:text="${sickNotesCount}">0</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="dashboard-card">
+                <h5>Patient Reports</h5>
+                <p>Patient history, patients by GP and diagnosis search.</p>
+                <a class="btn btn-primary btn-sm" th:href="@{/reports/patients}">Open</a>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="dashboard-card">
+                <h5>Visit Reports</h5>
+                <p>Visits by doctor, period, or doctor and period.</p>
+                <a class="btn btn-primary btn-sm" th:href="@{/reports/visits}">Open</a>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="dashboard-card">
+                <h5>Financial Reports</h5>
+                <p>Paid visits and totals for uninsured patients.</p>
+                <a class="btn btn-primary btn-sm" th:href="@{/reports/financial}">Open</a>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="dashboard-card">
+                <h5>Sick Note Reports</h5>
+                <p>Months and doctors with the most sick notes.</p>
+                <a class="btn btn-primary btn-sm" th:href="@{/reports/sick-notes}">Open</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-card mt-3">
+        <h4>Quick Statistics</h4>
+
+        <p th:if="${mostCommonDiagnosis != null}">
+            <strong>Most common diagnosis:</strong>
+            <span th:text="${mostCommonDiagnosis.key}"></span>
+            (<span th:text="${mostCommonDiagnosis.value}"></span> visits)
+        </p>
+
+        <h5 class="mt-4">Visits Count by Doctor</h5>
+        <table class="table table-hover" th:if="${visitsCountByDoctor != null}">
+            <tr>
+                <th>Doctor</th>
+                <th>Visits Count</th>
+            </tr>
+            <tr th:each="row : ${visitsCountByDoctor}">
+                <td th:text="${row.key}"></td>
+                <td th:text="${row.value}"></td>
+            </tr>
+        </table>
+
+        <h5 class="mt-4">Patients Count by GP</h5>
+        <table class="table table-hover" th:if="${patientsCountByGp != null}">
+            <tr>
+                <th>GP Doctor</th>
+                <th>Patients Count</th>
+            </tr>
+            <tr th:each="row : ${patientsCountByGp}">
+                <td th:text="${row.key}"></td>
+                <td th:text="${row.value}"></td>
+            </tr>
+        </table>
+    </div>
+
+    <a class="btn btn-secondary mt-3" th:href="@{/dashboard}">Back to Dashboard</a>
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

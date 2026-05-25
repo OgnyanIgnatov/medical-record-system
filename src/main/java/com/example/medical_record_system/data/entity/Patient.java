@@ -26,6 +26,9 @@ public class Patient extends BaseEntity{
     @NotBlank
     private String ucn;
 
+    @Column(unique = true)
+    private String username;
+
     @ManyToOne
     @NotNull
     private Doctor gp;

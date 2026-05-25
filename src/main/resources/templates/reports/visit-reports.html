@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head}"></head>
+<body>
+<nav th:replace="~{fragments :: navigation}"></nav>
+
+<main class="page-shell">
+    <h2 class="page-title">Visit Reports</h2>
+
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="form-card">
+                <h5>Visits by Doctor</h5>
+
+                <form th:action="@{/reports/visits/by-doctor}" method="get">
+                    <label>Doctor</label>
+                    <select class="form-control" name="doctorId" required>
+                        <option value="">Select Doctor</option>
+                        <option th:each="doctor : ${doctors}"
+                                th:value="${doctor.id}"
+                                th:text="${doctor.name + ' - ' + doctor.degree}">
+                        </option>
+                    </select>
+
+                    <button class="btn btn-primary mt-3" type="submit">Show Visits</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-4">
+            <div class="form-card">
+                <h5>Visits by Period</h5>
+
+                <form th:action="@{/reports/visits/by-period}" method="get">
+                    <label>Start Date</label>
+                    <input class="form-control" type="date" name="startDate" required>
+
+                    <label class="mt-2">End Date</label>
+                    <input class="form-control" type="date" name="endDate" required>
+
+                    <button class="btn btn-primary mt-3" type="submit">Show Visits</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-4">
+            <div class="form-card">
+                <h5>Visits by Doctor and Period</h5>
+
+                <form th:action="@{/reports/visits/by-doctor-and-period}" method="get">
+                    <label>Doctor</label>
+                    <select class="form-control" name="doctorId" required>
+                        <option value="">Select Doctor</option>
+                        <option th:each="doctor : ${doctors}"
+                                th:value="${doctor.id}"
+                                th:text="${doctor.name + ' - ' + doctor.degree}">
+                        </option>
+                    </select>
+
+                    <label class="mt-2">Start Date</label>
+                    <input class="form-control" type="date" name="startDate" required>
+
+                    <label class="mt-2">End Date</label>
+                    <input class="form-control" type="date" name="endDate" required>
+
+                    <button class="btn btn-primary mt-3" type="submit">Show Visits</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-card" th:if="${visitsByDoctor != null}">
+        <h4>Visits by Doctor</h4>
+
+        <h5 th:if="${visitsByDoctor.size() == 0}">No visits found.</h5>
+
+        <div class="table-responsive" th:if="${visitsByDoctor.size() > 0}">
+            <table class="table table-hover mb-0">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Patient</th>
+                    <th>Diagnosis</th>
+                    <th>Treatment</th>
+                    <th>Price</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="visit : ${visitsByDoctor}">
+                    <td th:text="${#dates.format(visit.date, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${visit.patient.name}"></td>
+                    <td th:text="${visit.diagnosis}"></td>
+                    <td th:text="${visit.treatment}"></td>
+                    <td th:text="${visit.price}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="table-card mt-4" th:if="${visitsByPeriod != null}">
+        <h4>Visits by Period</h4>
+
+        <h5 th:if="${visitsByPeriod.size() == 0}">No visits found.</h5>
+
+        <div class="table-responsive" th:if="${visitsByPeriod.size() > 0}">
+            <table class="table table-hover mb-0">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Diagnosis</th>
+                    <th>Treatment</th>
+                    <th>Price</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="visit : ${visitsByPeriod}">
+                    <td th:text="${#dates.format(visit.date, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${visit.patient.name}"></td>
+                    <td th:text="${visit.doctor.name}"></td>
+                    <td th:text="${visit.diagnosis}"></td>
+                    <td th:text="${visit.treatment}"></td>
+                    <td th:text="${visit.price}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="table-card mt-4" th:if="${visitsByDoctorAndPeriod != null}">
+        <h4>Visits by Doctor and Period</h4>
+
+        <h5 th:if="${visitsByDoctorAndPeriod.size() == 0}">No visits found.</h5>
+
+        <div class="table-responsive" th:if="${visitsByDoctorAndPeriod.size() > 0}">
+            <table class="table table-hover mb-0">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Patient</th>
+                    <th>Doctor</th>
+                    <th>Diagnosis</th>
+                    <th>Treatment</th>
+                    <th>Price</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="visit : ${visitsByDoctorAndPeriod}">
+                    <td th:text="${#dates.format(visit.date, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${visit.patient.name}"></td>
+                    <td th:text="${visit.doctor.name}"></td>
+                    <td th:text="${visit.diagnosis}"></td>
+                    <td th:text="${visit.treatment}"></td>
+                    <td th:text="${visit.price}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <a class="btn btn-secondary mt-3" th:href="@{/reports}">Back to Reports</a>
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

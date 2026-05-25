@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head}"></head>
+<body>
+<nav th:replace="~{fragments :: navigation}"></nav>
+
+<main class="page-shell">
+    <h2 class="page-title">Admin Dashboard</h2>
+    <p class="page-subtitle">Full access to doctors, patients, visits, sick notes and reports.</p>
+
+    <div class="row">
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="dashboard-card">
+                <h5>Doctors</h5>
+                <p>Create, view, edit and delete doctors in the system.</p>
+                <a class="btn btn-primary btn-sm" th:href="@{/doctors}">View Doctors</a>
+                <a class="btn btn-outline-primary btn-sm" th:href="@{/doctors/create-doctor}">Add Doctor</a>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="dashboard-card">
+                <h5>Patients</h5>
+                <p>Create, view, edit and delete patient records.</p>
+                <a class="btn btn-primary btn-sm" th:href="@{/patients}">View Patients</a>
+                <a class="btn btn-outline-primary btn-sm" th:href="@{/patients/create-patient}">Add Patient</a>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="dashboard-card">
+                <h5>Visits</h5>
+                <p>Manage medical visits, diagnoses, treatments and prices.</p>
+                <a class="btn btn-primary btn-sm" th:href="@{/visits}">View Visits</a>
+                <a class="btn btn-outline-primary btn-sm" th:href="@{/visits/create-visit}">Add Visit</a>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="dashboard-card">
+                <h5>Sick Notes</h5>
+                <p>Manage issued sick notes connected to medical visits.</p>
+                <a class="btn btn-primary btn-sm" th:href="@{/sick-notes}">View Sick Notes</a>
+                <a class="btn btn-outline-primary btn-sm" th:href="@{/sick-notes/create-sick-note}">Add Sick Note</a>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="dashboard-card">
+                <h5>Reports</h5>
+                <p>Open statistics for diagnoses, doctors, patients, visits and sick notes.</p>
+                <a class="btn btn-secondary btn-sm" th:href="@{/reports}">Open Reports</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

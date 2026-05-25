@@ -14,5 +14,5 @@ public interface VisitRepo extends JpaRepository<Visit, Long> {
     List<Visit> findAllByDiagnosisContainsIgnoreCase(String diagnosis);
     List<Visit> findAllByPatientIsInsuredFalse();
     List<Visit> findAllByDoctorIdAndPatientIsInsuredFalse(Long doctorId);
-
+    Visit findVisitById(Long id);
 }

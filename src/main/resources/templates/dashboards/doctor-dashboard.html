@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head}"></head>
+<body>
+<nav th:replace="~{fragments :: navigation}"></nav>
+
+<main class="page-shell">
+    <h2 class="page-title">Doctor Dashboard</h2>
+    <p class="page-subtitle">
+        View patient data, visits, sick notes and reports. You can edit only visits assigned to your doctor profile.
+    </p>
+
+    <div class="row">
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="dashboard-card">
+                <h5>Patients</h5>
+                <p>View patient records and their assigned general practitioners.</p>
+                <a class="btn btn-primary btn-sm" th:href="@{/patients}">View Patients</a>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="dashboard-card">
+                <h5>Visits</h5>
+                <p>View all visits and create new medical visits. Editing is limited to your own visits.</p>
+                <a class="btn btn-primary btn-sm" th:href="@{/visits}">View Visits</a>
+                <a class="btn btn-outline-primary btn-sm" th:href="@{/visits/create-visit}">Add Visit</a>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="dashboard-card">
+                <h5>Sick Notes</h5>
+                <p>View and manage sick notes issued for medical visits.</p>
+                <a class="btn btn-primary btn-sm" th:href="@{/sick-notes}">View Sick Notes</a>
+                <a class="btn btn-outline-primary btn-sm" th:href="@{/sick-notes/create-sick-note}">Add Sick Note</a>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="dashboard-card">
+                <h5>Reports</h5>
+                <p>Review statistics for diagnoses, visits, doctors, patients and sick notes.</p>
+                <a class="btn btn-secondary btn-sm" th:href="@{/reports}">Open Reports</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

@@ -17,6 +17,9 @@ import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import java.util.HashSet;
 import java.util.List;
@@ -28,6 +31,16 @@ import java.util.Set;
 @EnableMethodSecurity(securedEnabled = true)
 @AllArgsConstructor
 public class SecurityConfig {
+
+    @Bean
+    public LogoutSuccessHandler oidcLogoutSuccessHandler(ClientRegistrationRepository clientRegistrationRepository) {
+        OidcClientInitiatedLogoutSuccessHandler logoutSuccessHandler =
+                new OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository);
+
+        logoutSuccessHandler.setPostLogoutRedirectUri("{baseUrl}/");
+
+        return logoutSuccessHandler;
+    }
 
     @Bean
     public OidcUserService oidcUserService() {
@@ -74,9 +87,14 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, ClientRegistrationRepository clientRegistrationRepository) throws Exception {
         http.authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/css/**", "/js/**").permitAll()
+                        .requestMatchers("/", "/dashboard").authenticated()
+
+                        .requestMatchers("/admin/**").hasAuthority("admin")
+                        .requestMatchers("/doctor/**").hasAuthority("doctor")
+                        .requestMatchers("/patient/**").hasAuthority("patient")
 
                         .requestMatchers("/doctors/**").hasAuthority("admin")
 
@@ -89,7 +107,7 @@ public class SecurityConfig {
                         .requestMatchers("/sick-notes/**")
                         .hasAnyAuthority("admin", "doctor")
 
-                        .requestMatchers("/reports/**")
+                        .requestMatchers("/reports", "/reports/**")
                         .hasAnyAuthority("admin", "doctor")
 
                         .requestMatchers("/api/doctors/**")
@@ -108,6 +126,12 @@ public class SecurityConfig {
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .accessDeniedPage("/unauthorized")
+                )
+                .logout(logout -> logout
+                        .logoutSuccessHandler(oidcLogoutSuccessHandler(clientRegistrationRepository))
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwtCustomizer -> jwtCustomizer

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head}"></head>
+<body>
+<nav th:replace="~{fragments :: navigation}"></nav>
+
+<main class="page-shell">
+    <h2 class="page-title">Patient Dashboard</h2>
+    <p class="page-subtitle">View your own medical visits, diagnoses and treatments.</p>
+
+    <div class="row">
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="dashboard-card">
+                <h5>My Medical History</h5>
+                <p>See only your own visits, diagnoses, treatments and assigned doctors.</p>
+                <a class="btn btn-primary btn-sm" th:href="@{/patient/my-history}">Open My History</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

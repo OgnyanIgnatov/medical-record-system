@@ -1,27 +1,64 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments :: head"></head>
+<head th:replace="~{fragments :: head}"></head>
 <body>
-<h1>Medical Record</h1>
-<nav th:replace="fragments :: navigation"></nav>
-<h4>Patients:</h4>
-<div class="col-6">
-    <h3 th:if="${patients == null}">There are no patients!</h3>
-    <table th:if="${patients.size()>0}" class="table table-hover">
-        <th>Name</th>
-        <th>UCN</th>
-        <th>GP ID</th>
-        <th>Edit</th>
-        <th>Delete</th>
-        <tr th:each="patient : ${patients}">
-            <td th:text="${patient.name}"></td>
-            <td th:text="${patient.ucn}"></td>
-            <td th:text="${patient.gpId}"></td>
-            <td><a class="btn btn-info" th:href="@{'/patients/edit-patient/'+${patient.id}}">Edit</a></td>
-            <td><a class="btn btn-danger" th:href="@{'/patients/delete/'+${patient.id}}">Delete</a></td>
-        </tr>
-    </table>
-</div>
-<footer th:replace="fragments :: footer"></footer>
+<nav th:replace="~{fragments :: navigation}"></nav>
+
+<main class="page-shell">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2 class="page-title">Patients</h2>
+        </div>
+
+        <a class="btn btn-primary" th:href="@{/patients/create-patient}">Add Patient</a>
+    </div>
+
+    <div class="table-card">
+        <h4 th:if="${patients == null || patients.size() == 0}">There are no patients!</h4>
+
+        <div class="table-responsive" th:if="${patients != null && patients.size() > 0}">
+            <table class="table table-hover mb-0">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>UCN</th>
+                    <th>Username</th>
+                    <th>Insured</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="patient : ${patients}">
+                    <td th:text="${patient.id}"></td>
+                    <td th:text="${patient.name}"></td>
+                    <td th:text="${patient.ucn}"></td>
+                    <td th:text="${patient.username}"></td>
+                    <td>
+                        <span class="badge badge-success" th:if="${patient.isInsured == true}">Yes</span>
+                        <span class="badge badge-warning" th:if="${patient.isInsured == false}">No</span>
+                    </td>
+                    <td class="text-right">
+                        <a class="btn btn-sm btn-outline-primary"
+                           th:href="@{'/patients/edit-patient/' + ${patient.id}}">
+                            Edit
+                        </a>
+                        <a class="btn btn-sm btn-outline-danger"
+                           th:href="@{'/patients/delete/' + ${patient.id}}"
+                           onclick="return confirm('Are you sure you want to delete this patient?');">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <a class="btn btn-secondary mt-3" th:href="@{/dashboard}">Back to Dashboard</a>
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
 </body>
 </html>

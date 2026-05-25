@@ -2,40 +2,59 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments :: head}"></head>
 <body>
-<h1>Medical Record</h1>
 <nav th:replace="~{fragments :: navigation}"></nav>
 
-<h4>Visits:</h4>
+<main class="page-shell">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2 class="page-title">Medical Visits</h2>
+        </div>
 
-<div class="col-8">
-    <a class="btn btn-primary mb-3" th:href="@{/visits/create-visit}">Create Visit</a>
+        <a class="btn btn-primary" th:href="@{/visits/create-visit}">Add Visit</a>
+    </div>
 
-    <h3 th:if="${visits == null || visits.size() == 0}">There are no visits!</h3>
+    <div class="table-card">
+        <h4 th:if="${visits == null || visits.size() == 0}">There are no visits!</h4>
 
-    <table th:if="${visits != null && visits.size() > 0}" class="table table-hover">
-        <tr>
-            <th>Date</th>
-            <th>Patient ID</th>
-            <th>Doctor ID</th>
-            <th>Diagnosis</th>
-            <th>Treatment</th>
-            <th>Price</th>
-            <th>Edit</th>
-            <th>Delete</th>
-        </tr>
+        <div class="table-responsive" th:if="${visits != null && visits.size() > 0}">
+            <table class="table table-hover mb-0">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Diagnosis</th>
+                    <th>Treatment</th>
+                    <th>Price</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+                </thead>
 
-        <tr th:each="visit : ${visits}">
-            <td th:text="${#dates.format(visit.date, 'yyyy-MM-dd')}"></td>
-            <td th:text="${visit.patientId}"></td>
-            <td th:text="${visit.doctorId}"></td>
-            <td th:text="${visit.diagnosis}"></td>
-            <td th:text="${visit.treatment}"></td>
-            <td th:text="${visit.price}"></td>
-            <td><a class="btn btn-info" th:href="@{'/visits/edit-visit/' + ${visit.id}}">Edit</a></td>
-            <td><a class="btn btn-danger" th:href="@{'/visits/delete/' + ${visit.id}}">Delete</a></td>
-        </tr>
-    </table>
-</div>
+                <tbody>
+                <tr th:each="visit : ${visits}">
+                    <td th:text="${visit.id}"></td>
+                    <td th:text="${#dates.format(visit.date, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${visit.diagnosis}"></td>
+                    <td th:text="${visit.treatment}"></td>
+                    <td th:text="${visit.price}"></td>
+                    <td class="text-right">
+                        <a class="btn btn-sm btn-outline-primary"
+                           th:href="@{'/visits/edit-visit/' + ${visit.id}}">
+                            Edit
+                        </a>
+                        <a class="btn btn-sm btn-outline-danger"
+                           th:href="@{'/visits/delete/' + ${visit.id}}"
+                           onclick="return confirm('Are you sure you want to delete this visit?');">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <a class="btn btn-secondary mt-3" th:href="@{/dashboard}">Back to Dashboard</a>
+</main>
 
 <footer th:replace="~{fragments :: footer}"></footer>
 </body>

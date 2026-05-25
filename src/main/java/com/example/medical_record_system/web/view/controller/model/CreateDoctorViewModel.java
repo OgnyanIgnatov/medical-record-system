@@ -21,6 +21,9 @@ public class CreateDoctorViewModel {
     @NotBlank(message = "UID is required")
     private String uid;
 
+    @Column(unique = true)
+    private String username;
+
     @NotBlank(message = "Name is required")
     private String name;
 

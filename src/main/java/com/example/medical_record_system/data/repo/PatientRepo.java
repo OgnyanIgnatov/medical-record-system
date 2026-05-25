@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface PatientRepo extends JpaRepository<Patient, Long> {
     List<Patient> findAllByGpId(Long gpId);
+    Patient findByUsername(String username);
 }

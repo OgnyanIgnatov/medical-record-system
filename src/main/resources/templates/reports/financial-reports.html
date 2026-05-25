@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head}"></head>
+<body>
+<nav th:replace="~{fragments :: navigation}"></nav>
+
+<main class="page-shell">
+    <h2 class="page-title">Financial Reports</h2>
+
+    <div class="row mb-4">
+        <div class="col-lg-5 mb-4">
+            <div class="dashboard-card">
+                <h5>Total Paid by Uninsured Patients</h5>
+                <h2>
+                    <span th:text="${totalPaidByPatients}">0</span>
+                </h2>
+                <p class="mb-0">Total value of paid visits where the patient is not insured.</p>
+            </div>
+        </div>
+
+        <div class="col-lg-7 mb-4">
+            <div class="form-card">
+                <h5>Paid Visits by Doctor</h5>
+
+                <form th:action="@{/reports/financial/by-doctor}" method="get">
+                    <label>Doctor</label>
+                    <select class="form-control" name="doctorId" required>
+                        <option value="">Select Doctor</option>
+                        <option th:each="doctor : ${doctors}"
+                                th:value="${doctor.id}"
+                                th:text="${doctor.name + ' - ' + doctor.degree}">
+                        </option>
+                    </select>
+
+                    <button class="btn btn-primary mt-3" type="submit">Show Paid Visits</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-card">
+        <h4>Total Paid by Doctor</h4>
+
+        <h5 th:if="${paidByDoctor == null || paidByDoctor.size() == 0}">No paid visits found.</h5>
+
+        <div class="table-responsive" th:if="${paidByDoctor != null && paidByDoctor.size() > 0}">
+            <table class="table table-hover mb-0">
+                <thead>
+                <tr>
+                    <th>Doctor</th>
+                    <th>Total Paid</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="row : ${paidByDoctor}">
+                    <td th:text="${row.key}"></td>
+                    <td th:text="${row.value}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="table-card mt-4" th:if="${paidVisitsByDoctor != null}">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="mb-0">Paid Visits for Selected Doctor</h4>
+
+            <h5 class="mb-0">
+                Total:
+                <span th:text="${paidByDoctorTotal}">0</span>
+            </h5>
+        </div>
+
+        <h5 th:if="${paidVisitsByDoctor.size() == 0}">No paid visits found for this doctor.</h5>
+
+        <div class="table-responsive" th:if="${paidVisitsByDoctor.size() > 0}">
+            <table class="table table-hover mb-0">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Patient</th>
+                    <th>Diagnosis</th>
+                    <th>Treatment</th>
+                    <th>Price</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="visit : ${paidVisitsByDoctor}">
+                    <td th:text="${#dates.format(visit.date, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${visit.patient.name}"></td>
+                    <td th:text="${visit.diagnosis}"></td>
+                    <td th:text="${visit.treatment}"></td>
+                    <td th:text="${visit.price}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <a class="btn btn-secondary mt-3" th:href="@{/reports}">Back to Reports</a>
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

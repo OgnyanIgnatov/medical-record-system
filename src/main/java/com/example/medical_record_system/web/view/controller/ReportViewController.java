@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -33,61 +32,79 @@ public class ReportViewController {
     private final DoctorService doctorService;
 
     @GetMapping
-    public String reportsHome(Model model) {
-        addBaseAttributes(model);
+    public String reportsDashboard(Model model) {
         addStatistics(model);
-        return "reports/reports";
+        return "reports/reports-dashboard";
     }
 
-    @GetMapping("/patient-history")
+    @GetMapping("/patients")
+    public String patientReports(Model model) {
+        addBaseAttributes(model);
+        return "reports/patient-reports";
+    }
+
+    @GetMapping("/patients/history")
     public String patientHistory(@RequestParam Long patientId, Model model) {
         addBaseAttributes(model);
-        addStatistics(model);
 
         List<Visit> visits = visitRepo.findAllByPatientId(patientId);
         model.addAttribute("patientHistoryVisits", visits);
 
-        return "reports/reports";
+        return "reports/patient-reports";
     }
 
-    @GetMapping("/patients-by-gp")
+    @GetMapping("/patients/by-gp")
     public String patientsByGp(@RequestParam Long doctorId, Model model) {
         addBaseAttributes(model);
-        addStatistics(model);
 
         List<Patient> patients = patientRepo.findAllByGpId(doctorId);
         model.addAttribute("patientsByGp", patients);
 
-        return "reports/reports";
+        return "reports/patient-reports";
     }
 
-    @GetMapping("/visits-by-doctor")
+    @GetMapping("/patients/diagnosis")
+    public String visitsByDiagnosis(@RequestParam String diagnosis, Model model) {
+        addBaseAttributes(model);
+
+        List<Visit> visits = visitRepo.findAllByDiagnosisContainsIgnoreCase(diagnosis);
+        model.addAttribute("visitsByDiagnosis", visits);
+        model.addAttribute("searchedDiagnosis", diagnosis);
+
+        return "reports/patient-reports";
+    }
+
+    @GetMapping("/visits")
+    public String visitReports(Model model) {
+        addBaseAttributes(model);
+        return "reports/visit-reports";
+    }
+
+    @GetMapping("/visits/by-doctor")
     public String visitsByDoctor(@RequestParam Long doctorId, Model model) {
         addBaseAttributes(model);
-        addStatistics(model);
 
         List<Visit> visits = visitRepo.findAllByDoctorId(doctorId);
         model.addAttribute("visitsByDoctor", visits);
 
-        return "reports/reports";
+        return "reports/visit-reports";
     }
 
-    @GetMapping("/visits-by-period")
+    @GetMapping("/visits/by-period")
     public String visitsByPeriod(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
             Model model
     ) {
         addBaseAttributes(model);
-        addStatistics(model);
 
         List<Visit> visits = visitRepo.findAllByDateBetween(startDate, endDate);
         model.addAttribute("visitsByPeriod", visits);
 
-        return "reports/reports";
+        return "reports/visit-reports";
     }
 
-    @GetMapping("/visits-by-doctor-and-period")
+    @GetMapping("/visits/by-doctor-and-period")
     public String visitsByDoctorAndPeriod(
             @RequestParam Long doctorId,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
@@ -95,29 +112,40 @@ public class ReportViewController {
             Model model
     ) {
         addBaseAttributes(model);
-        addStatistics(model);
 
         List<Visit> visits = visitRepo.findAllByDoctorIdAndDateBetween(doctorId, startDate, endDate);
         model.addAttribute("visitsByDoctorAndPeriod", visits);
 
-        return "reports/reports";
+        return "reports/visit-reports";
     }
 
-    @GetMapping("/diagnosis")
-    public String visitsByDiagnosis(@RequestParam String diagnosis, Model model) {
+    @GetMapping("/financial")
+    public String financialReports(Model model) {
         addBaseAttributes(model);
-        addStatistics(model);
 
-        List<Visit> visits = visitRepo.findAllByDiagnosisContainsIgnoreCase(diagnosis);
-        model.addAttribute("visitsByDiagnosis", visits);
+        List<Visit> allVisits = visitRepo.findAll();
 
-        return "reports/reports";
+        double totalPaidByPatients = allVisits.stream()
+                .filter(visit -> Boolean.FALSE.equals(visit.getPatient().getIsInsured()))
+                .mapToDouble(Visit::getPrice)
+                .sum();
+
+        Map<String, Double> paidByDoctor = allVisits.stream()
+                .filter(visit -> Boolean.FALSE.equals(visit.getPatient().getIsInsured()))
+                .collect(Collectors.groupingBy(
+                        visit -> visit.getDoctor().getName(),
+                        Collectors.summingDouble(Visit::getPrice)
+                ));
+
+        model.addAttribute("totalPaidByPatients", totalPaidByPatients);
+        model.addAttribute("paidByDoctor", paidByDoctor);
+
+        return "reports/financial-reports";
     }
 
-    @GetMapping("/paid-by-doctor")
+    @GetMapping("/financial/by-doctor")
     public String paidByDoctor(@RequestParam Long doctorId, Model model) {
         addBaseAttributes(model);
-        addStatistics(model);
 
         List<Visit> visits = visitRepo.findAllByDoctorIdAndPatientIsInsuredFalse(doctorId);
 
@@ -128,7 +156,13 @@ public class ReportViewController {
         model.addAttribute("paidVisitsByDoctor", visits);
         model.addAttribute("paidByDoctorTotal", total);
 
-        return "reports/reports";
+        return "reports/financial-reports";
+    }
+
+    @GetMapping("/sick-notes")
+    public String sickNoteReports(Model model) {
+        addSickNoteStatistics(model);
+        return "reports/sick-note-reports";
     }
 
     private void addBaseAttributes(Model model) {
@@ -141,7 +175,6 @@ public class ReportViewController {
         List<Patient> allPatients = patientRepo.findAll();
         List<SickNote> allSickNotes = sickNoteRepo.findAll();
 
-        // Най-често срещана диагноза
         Map<String, Long> diagnosisCount = allVisits.stream()
                 .collect(Collectors.groupingBy(Visit::getDiagnosis, Collectors.counting()));
 
@@ -150,35 +183,29 @@ public class ReportViewController {
                 .max(Map.Entry.comparingByValue())
                 .orElse(null);
 
-        // Брой посещения при всеки лекар
         Map<String, Long> visitsCountByDoctor = allVisits.stream()
                 .collect(Collectors.groupingBy(
                         visit -> visit.getDoctor().getName(),
                         Collectors.counting()
                 ));
 
-        // Брой пациенти при всеки личен лекар
         Map<String, Long> patientsCountByGp = allPatients.stream()
                 .collect(Collectors.groupingBy(
                         patient -> patient.getGp().getName(),
                         Collectors.counting()
                 ));
 
-        // Обща стойност на платените от неосигурени пациенти прегледи
-        double totalPaidByPatients = allVisits.stream()
-                .filter(visit -> Boolean.FALSE.equals(visit.getPatient().getIsInsured()))
-                .mapToDouble(Visit::getPrice)
-                .sum();
+        model.addAttribute("mostCommonDiagnosis", mostCommonDiagnosis);
+        model.addAttribute("visitsCountByDoctor", visitsCountByDoctor);
+        model.addAttribute("patientsCountByGp", patientsCountByGp);
+        model.addAttribute("visitsCount", allVisits.size());
+        model.addAttribute("patientsCount", allPatients.size());
+        model.addAttribute("sickNotesCount", allSickNotes.size());
+    }
 
-        // Стойност на платените от пациентите прегледи според лекаря
-        Map<String, Double> paidByDoctor = allVisits.stream()
-                .filter(visit -> Boolean.FALSE.equals(visit.getPatient().getIsInsured()))
-                .collect(Collectors.groupingBy(
-                        visit -> visit.getDoctor().getName(),
-                        Collectors.summingDouble(Visit::getPrice)
-                ));
+    private void addSickNoteStatistics(Model model) {
+        List<SickNote> allSickNotes = sickNoteRepo.findAll();
 
-        // Месец с най-много издадени болнични
         Map<Integer, Long> sickNotesByMonth = allSickNotes.stream()
                 .collect(Collectors.groupingBy(
                         sickNote -> sickNote.getIssuedDate().getMonth() + 1,
@@ -190,7 +217,6 @@ public class ReportViewController {
                 .max(Map.Entry.comparingByValue())
                 .orElse(null);
 
-        // Лекар с най-много издадени болнични
         Map<String, Long> sickNotesByDoctor = allSickNotes.stream()
                 .collect(Collectors.groupingBy(
                         sickNote -> sickNote.getVisit().getDoctor().getName(),
@@ -202,12 +228,9 @@ public class ReportViewController {
                 .max(Map.Entry.comparingByValue())
                 .orElse(null);
 
-        model.addAttribute("mostCommonDiagnosis", mostCommonDiagnosis);
-        model.addAttribute("visitsCountByDoctor", visitsCountByDoctor);
-        model.addAttribute("patientsCountByGp", patientsCountByGp);
-        model.addAttribute("totalPaidByPatients", totalPaidByPatients);
-        model.addAttribute("paidByDoctor", paidByDoctor);
         model.addAttribute("monthWithMostSickNotes", monthWithMostSickNotes);
         model.addAttribute("doctorWithMostSickNotes", doctorWithMostSickNotes);
+        model.addAttribute("sickNotesByMonth", sickNotesByMonth);
+        model.addAttribute("sickNotesByDoctor", sickNotesByDoctor);
     }
 }

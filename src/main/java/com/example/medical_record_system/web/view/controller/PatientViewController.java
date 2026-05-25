@@ -63,7 +63,7 @@ public class PatientViewController {
     public String updatePatient(@PathVariable long id,@Valid @ModelAttribute PatientDto patient, BindingResult bindingResult, Model model) {
         if(bindingResult.hasErrors()){
             model.addAttribute("doctors", doctorService.getDoctors());
-            return "patient/edit-patient";
+            return "patients/edit-patient";
         }
 
         this.patientService.updatePatient(patient, id);

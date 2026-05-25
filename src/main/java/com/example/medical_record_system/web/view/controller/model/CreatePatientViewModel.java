@@ -26,6 +26,9 @@ public class CreatePatientViewModel {
     @NotBlank(message = "UCN is required")
     private String ucn;
 
+    @Column(unique = true)
+    private String username;
+
     @NotNull(message = "Select GP doctor")
     private Long gpId;
 

@@ -48,6 +48,7 @@ public class DoctorServiceImpl implements DoctorService {
                 .map(doctorEntity -> {
                     doctorEntity.setUid(doctor.getUid());
                     doctorEntity.setName(doctor.getName());
+                    doctorEntity.setUsername(doctor.getUsername());
                     doctorEntity.setDegree(doctor.getDegree());
                     return this.doctorRepo.save(doctorEntity);
                 })

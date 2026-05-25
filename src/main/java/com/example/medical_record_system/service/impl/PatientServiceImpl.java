@@ -62,6 +62,7 @@ public class PatientServiceImpl implements PatientService {
 
                     patientEntity.setName(patient.getName());
                     patientEntity.setUcn(patient.getUcn());
+                    patientEntity.setUsername(patient.getUsername());
                     patientEntity.setIsInsured(patient.getIsInsured());
                     patientEntity.setGp(gp);
 

@@ -21,6 +21,9 @@ public class CreatePatientDto {
     @NotBlank(message = "UCN is required")
     private String ucn;
 
+    @Column(unique = true)
+    private String username;
+
     @NotNull(message = "GP ID is required")
     private Long gpId;
 

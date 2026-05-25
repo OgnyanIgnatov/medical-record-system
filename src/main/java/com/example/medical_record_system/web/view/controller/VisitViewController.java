@@ -1,7 +1,10 @@
 package com.example.medical_record_system.web.view.controller;
 
+import com.example.medical_record_system.data.entity.Visit;
+import com.example.medical_record_system.data.repo.VisitRepo;
 import com.example.medical_record_system.dto.CreateVisitDto;
 import com.example.medical_record_system.dto.VisitDto;
+import com.example.medical_record_system.exception.VisitNotFoundException;
 import com.example.medical_record_system.service.DoctorService;
 import com.example.medical_record_system.service.PatientService;
 import com.example.medical_record_system.service.VisitService;
@@ -10,6 +13,8 @@ import com.example.medical_record_system.web.view.controller.model.CreateVisitVi
 import com.example.medical_record_system.web.view.controller.model.VisitViewModel;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,6 +30,7 @@ public class VisitViewController {
     private final VisitService visitService;
     private final PatientService patientService;
     private final DoctorService doctorService;
+    private final VisitRepo visitRepo;
     private final MapperUtil mapperUtil;
 
     @PostMapping("/create")
@@ -61,15 +67,19 @@ public class VisitViewController {
     }
 
     @GetMapping("/edit-visit/{id}")
-    public String showEditVisitForm(Model model, @PathVariable long id) {
+    public String showEditVisitForm(Model model, @PathVariable long id, Authentication authentication) {
+        checkDoctorOwnsVisitOrAdmin(id, authentication);
         model.addAttribute("visit", this.visitService.getVisit(id));
         model.addAttribute("patients", patientService.getPatients());
         model.addAttribute("doctors", doctorService.getDoctors());
+
         return "visits/edit-visit";
     }
 
     @PostMapping("/update/{id}")
-    public String updateVisit(@PathVariable long id, @Valid @ModelAttribute("visit") VisitDto visit, BindingResult bindingResult, Model model) {
+    public String updateVisit(@PathVariable long id, @Valid @ModelAttribute("visit") VisitDto visit, BindingResult bindingResult, Model model, Authentication authentication) {
+        checkDoctorOwnsVisitOrAdmin(id, authentication);
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("patients", patientService.getPatients());
             model.addAttribute("doctors", doctorService.getDoctors());
@@ -81,8 +91,36 @@ public class VisitViewController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteVisit(@PathVariable long id) {
+    public String deleteVisit(@PathVariable long id, Authentication authentication) {
+        checkDoctorOwnsVisitOrAdmin(id, authentication);
+
         this.visitService.deleteVisit(id);
         return "redirect:/visits";
+    }
+
+    private void checkDoctorOwnsVisitOrAdmin(long visitId, Authentication authentication) {
+        if (hasAuthority(authentication, "admin")) {
+            return;
+        }
+
+        Visit visit = visitRepo.findVisitById(visitId);
+
+        if (visit == null) {
+            throw new VisitNotFoundException("Visit with id=" + visitId + " not found!");
+        }
+
+        String username = authentication.getName();
+
+        if (visit.getDoctor() == null ||
+                visit.getDoctor().getUsername() == null ||
+                !visit.getDoctor().getUsername().equals(username)) {
+            throw new AccessDeniedException("You can edit only your own visits!");
+        }
+    }
+
+    private boolean hasAuthority(Authentication authentication, String authority) {
+        return authentication.getAuthorities()
+                .stream()
+                .anyMatch(a -> a.getAuthority().equals(authority));
     }
 }

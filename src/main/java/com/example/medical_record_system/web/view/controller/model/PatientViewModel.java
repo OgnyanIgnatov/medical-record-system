@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import org.hibernate.validator.constraints.UniqueElements;
 
 @Getter
 @Setter
@@ -23,6 +24,9 @@ public class PatientViewModel {
     @Pattern(regexp = "\\d{10}", message = "Invalid ID number")
     @NotBlank(message = "UCN is required")
     private String ucn;
+
+    @Column(unique = true)
+    private String username;
 
     @NotNull(message = "Please select GP doctor")
     private Long gpId;

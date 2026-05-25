@@ -21,6 +21,9 @@ public class Doctor extends BaseEntity{
     @NotBlank
     private String uid;
 
+    @Column(unique = true)
+    private String username;
+
     @NotBlank
     private String name;
 

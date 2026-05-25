@@ -22,6 +22,9 @@ public class DoctorViewModel {
     @NotBlank(message = "Name is required")
     private String name;
 
+    @Column(unique = true)
+    private String username;
+
     @NotBlank(message = "Degree is required")
     private String degree;
 

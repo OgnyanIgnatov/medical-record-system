@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head}"></head>
+<body>
+<nav th:replace="~{fragments :: navigation}"></nav>
+
+<main class="page-shell">
+    <h2 class="page-title">Patient Reports</h2>
+
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="form-card">
+                <h5>Patient Visit History</h5>
+                <form th:action="@{/reports/patients/history}" method="get">
+                    <label>Patient</label>
+                    <select class="form-control" name="patientId" required>
+                        <option value="">Select Patient</option>
+                        <option th:each="patient : ${patients}"
+                                th:value="${patient.id}"
+                                th:text="${patient.name + ' - ' + patient.ucn}">
+                        </option>
+                    </select>
+                    <button class="btn btn-primary mt-3" type="submit">Show History</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-4">
+            <div class="form-card">
+                <h5>Patients by GP</h5>
+                <form th:action="@{/reports/patients/by-gp}" method="get">
+                    <label>Doctor</label>
+                    <select class="form-control" name="doctorId" required>
+                        <option value="">Select GP Doctor</option>
+                        <option th:each="doctor : ${doctors}"
+                                th:value="${doctor.id}"
+                                th:text="${doctor.name + ' - ' + doctor.degree}">
+                        </option>
+                    </select>
+                    <button class="btn btn-primary mt-3" type="submit">Show Patients</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-4">
+            <div class="form-card">
+                <h5>Diagnosis Search</h5>
+                <form th:action="@{/reports/patients/diagnosis}" method="get">
+                    <label>Diagnosis</label>
+                    <input class="form-control" type="text" name="diagnosis" placeholder="Enter diagnosis" required>
+                    <button class="btn btn-primary mt-3" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-card" th:if="${patientHistoryVisits != null}">
+        <h4>Patient Visit History</h4>
+        <table class="table table-hover">
+            <tr>
+                <th>Date</th>
+                <th>Doctor</th>
+                <th>Diagnosis</th>
+                <th>Treatment</th>
+                <th>Price</th>
+            </tr>
+            <tr th:each="visit : ${patientHistoryVisits}">
+                <td th:text="${#dates.format(visit.date, 'yyyy-MM-dd')}"></td>
+                <td th:text="${visit.doctor.name}"></td>
+                <td th:text="${visit.diagnosis}"></td>
+                <td th:text="${visit.treatment}"></td>
+                <td th:text="${visit.price}"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="table-card mt-4" th:if="${patientsByGp != null}">
+        <h4>Patients by GP</h4>
+        <table class="table table-hover">
+            <tr>
+                <th>Name</th>
+                <th>UCN</th>
+                <th>Username</th>
+                <th>Insured</th>
+            </tr>
+            <tr th:each="patient : ${patientsByGp}">
+                <td th:text="${patient.name}"></td>
+                <td th:text="${patient.ucn}"></td>
+                <td th:text="${patient.username}"></td>
+                <td th:text="${patient.isInsured}"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="table-card mt-4" th:if="${visitsByDiagnosis != null}">
+        <h4>
+            Diagnosis Results:
+            <span th:text="${searchedDiagnosis}"></span>
+        </h4>
+        <table class="table table-hover">
+            <tr>
+                <th>Date</th>
+                <th>Patient</th>
+                <th>Doctor</th>
+                <th>Diagnosis</th>
+                <th>Treatment</th>
+            </tr>
+            <tr th:each="visit : ${visitsByDiagnosis}">
+                <td th:text="${#dates.format(visit.date, 'yyyy-MM-dd')}"></td>
+                <td th:text="${visit.patient.name}"></td>
+                <td th:text="${visit.doctor.name}"></td>
+                <td th:text="${visit.diagnosis}"></td>
+                <td th:text="${visit.treatment}"></td>
+            </tr>
+        </table>
+    </div>
+
+    <a class="btn btn-secondary mt-3" th:href="@{/reports}">Back to Reports</a>
+</main>
+
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>
